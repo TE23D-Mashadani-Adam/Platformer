@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - Wall
+  - Enemy
+  - BossBullet
+  - MegaBullet
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Wall
-  - 
+  - FinishWall
   - 
   - 
   - 
