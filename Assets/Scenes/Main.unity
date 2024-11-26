@@ -1204,8 +1204,8 @@ Transform:
   m_GameObject: {fileID: 584103434}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 76.42333, y: 7.625058, z: 9.975355}
-  m_LocalScale: {x: 1, y: 10.100337, z: 1}
+  m_LocalPosition: {x: 76.42333, y: 6.5654, z: 9.975355}
+  m_LocalScale: {x: 1, y: 7.9804, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 163314701}
@@ -3294,8 +3294,8 @@ Transform:
   m_GameObject: {fileID: 1413423977}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 85.73333, y: 5.0559583, z: 9.975355}
-  m_LocalScale: {x: 1, y: 9.5821495, z: 1}
+  m_LocalPosition: {x: 85.73333, y: 4.0629, z: 9.975355}
+  m_LocalScale: {x: 1, y: 7.5959344, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 163314701}
@@ -4492,6 +4492,10 @@ MonoBehaviour:
   wallHorizontalSpeed: 50
   wallJumpForce: 25
   offWallForce: 230
+  weapon: {fileID: 0}
+  gunPosition: {fileID: 0}
+  firePosition: {fileID: 0}
+  bullet: {fileID: 0}
 --- !u!61 &2107524821
 BoxCollider2D:
   m_ObjectHideFlags: 0

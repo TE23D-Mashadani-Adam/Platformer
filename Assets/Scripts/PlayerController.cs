@@ -6,6 +6,8 @@ using UnityEditor.Callbacks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+using System.Security.Principal;
+using Unity.Mathematics;
 
 public class PlayerController : MonoBehaviour
 {
@@ -42,6 +44,15 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     public static float health = 3;
+    [SerializeField]
+    Transform weapon;
+    [SerializeField]
+    Transform gunPosition;
+    [SerializeField]
+    Transform firePosition;
+    [SerializeField]
+    GameObject bullet;
+   
 
     float damage = .5f;
     float megaDamage = 1;
@@ -50,6 +61,13 @@ public class PlayerController : MonoBehaviour
     bool isWallJumping = false;
     bool isJumping;
     bool gameOver;
+    bool dead = false;
+    static public bool gunEquipped = false;
+
+    float timeBetweenShots = .4f;
+    float timeSinceLastshot = 0;
+
+
 
 
     void Start()
@@ -59,7 +77,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-
         AudioSource audioSource = GetComponent<AudioSource>();
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
@@ -132,13 +149,35 @@ public class PlayerController : MonoBehaviour
             respawn();
         }
 
-         if (Physics2D.OverlapCircle(RightWallChecker.position, .2f, finishWallLayer))
+        if (Physics2D.OverlapCircle(RightWallChecker.position, .2f, finishWallLayer))
         {
             print("finish");
             SceneManager.LoadScene(1);
+            health = 3;
+        }
+
+        float fireInput = Input.GetAxisRaw("Fire1");
+
+        timeSinceLastshot += Time.deltaTime;
+
+
+        if (fireInput > 0 && gunEquipped && timeSinceLastshot > timeBetweenShots)
+        {
+            Instantiate(bullet, firePosition.position, Quaternion.identity);
+            timeSinceLastshot = 0;
+        }
+
+        if (health <= 0)
+        {
+            gameOver = true;
         }
 
 
+        if (gameOver)
+        {
+            SceneManager.LoadScene(2);
+            health = 3;
+        }
 
     }
 
@@ -154,7 +193,7 @@ public class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapCircle(LeftWallChecker.position, 0.2f, wallLayer);
     }
-    private void WallSlide(Rigidbody2D rb, float wallSlideSpeed)
+    private void WallSlide  (Rigidbody2D rb, float wallSlideSpeed)
     {
         rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
     }
@@ -165,10 +204,12 @@ public class PlayerController : MonoBehaviour
         {
             health -= damage;
         }
-        else
-        {
-            gameOver = true;
-        }
+    }
+    void PickupWeapon()
+    {
+        weapon.SetParent(this.transform);
+        weapon.transform.position = gunPosition.position;
+        gunEquipped = true;
     }
 
 
@@ -187,12 +228,17 @@ public class PlayerController : MonoBehaviour
         {
             health -= damage;
             Destroy(other.gameObject);
-        }else if (other.tag == "MegaBullet")
+        }
+        else if (other.tag == "MegaBullet")
         {
             health -= megaDamage;
-
+            Destroy(other.gameObject);
         }
-       
+        if (other.tag == "Player Weapon")
+        {
+            PickupWeapon();
+        }
+
     }
 
 

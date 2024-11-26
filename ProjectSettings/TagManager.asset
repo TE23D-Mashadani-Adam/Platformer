@@ -9,6 +9,9 @@ TagManager:
   - Enemy
   - BossBullet
   - MegaBullet
+  - Player Weapon
+  - playerBullet
+  - Reflecting Wall
   layers:
   - Default
   - TransparentFX
