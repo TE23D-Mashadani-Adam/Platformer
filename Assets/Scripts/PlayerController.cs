@@ -110,7 +110,6 @@ public class PlayerController : MonoBehaviour
             if (IsGrounded())
             {
                 print("Jumping");
-                isJumping = true;
                 rb.AddForce(Vector2.up * jumpForce);
                 mayJump = false;
             }
@@ -132,6 +131,10 @@ public class PlayerController : MonoBehaviour
         if (IsGrounded() && mayJump)
         {
             isJumping = false;
+        }
+        else
+        {
+            isJumping = true;
         }
 
 
