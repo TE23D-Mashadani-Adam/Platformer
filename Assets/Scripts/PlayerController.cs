@@ -58,7 +58,6 @@ public class PlayerController : MonoBehaviour
     float megaDamage = 1;
 
     bool isWallSliding = false;
-    bool isWallJumping = false;
     bool isJumping;
     bool gameOver;
     bool dead = false;
