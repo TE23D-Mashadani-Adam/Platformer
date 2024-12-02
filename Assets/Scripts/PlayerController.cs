@@ -35,8 +35,7 @@ public class PlayerController : MonoBehaviour
     float slidingSpeed = -0.5f;
     [SerializeField]
     float wallSlideSpeed;
-    [SerializeField]
-    float wallHorizontalSpeed = 50;
+    
     [SerializeField]
     float wallJumpForce = 30;
     [SerializeField]
