@@ -23,7 +23,7 @@ public class BossController : MonoBehaviour
     Transform gunPosition;
     [SerializeField]
     Slider hpBar;
-     [SerializeField]
+    [SerializeField]
     Slider cooldownShootSlider;
 
     float timeBetweenShots = 0.8f;
@@ -157,6 +157,7 @@ public class BossController : MonoBehaviour
             PlayerController.gunEquipped = true;
             frozenCooldown = 0;
             antiFroze = false;
+            cooldownShootSlider.value = 0;
         }
 
         if (currentHealth < .5)
