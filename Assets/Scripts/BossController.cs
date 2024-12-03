@@ -145,6 +145,7 @@ public class BossController : MonoBehaviour
             antiFroze = true;
             PlayerController.gunEquipped = false;
             cooldownShootSlider.value = 0;
+
         }
 
         if (!frozen && antiFroze)
@@ -157,7 +158,6 @@ public class BossController : MonoBehaviour
             PlayerController.gunEquipped = true;
             frozenCooldown = 0;
             antiFroze = false;
-            cooldownShootSlider.value = 0;
         }
 
         if (currentHealth < .5)

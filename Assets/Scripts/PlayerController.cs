@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
     float slidingSpeed = -0.5f;
     [SerializeField]
     float wallSlideSpeed;
-    
+
     [SerializeField]
     float wallJumpForce = 30;
     [SerializeField]
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
     Transform firePosition;
     [SerializeField]
     GameObject bullet;
-   
+
 
     float damage = .5f;
     float megaDamage = 1;
@@ -78,6 +78,42 @@ public class PlayerController : MonoBehaviour
         AudioSource audioSource = GetComponent<AudioSource>();
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
+        float fireInput = Input.GetAxisRaw("Fire1");
+
+
+        JumpCode(rb, audioSource);
+
+        FlipPlayerCode(rb);
+
+        if (transform.position.y < -11)
+        {
+            respawn();
+        }
+
+        PlayerShootCode(fireInput);
+
+        if (Physics2D.OverlapCircle(RightWallChecker.position, .2f, finishWallLayer))
+        {
+            print("finish");
+            SceneManager.LoadScene(1);
+            health = 3;
+        }
+
+        if (health <= 0)
+        {
+            gameOver = true;
+        }
+
+        if (gameOver)
+        {
+            SceneManager.LoadScene(2);
+            health = 3;
+        }
+
+    }
+
+    public void JumpCode(Rigidbody2D rb, AudioSource audioSource)
+    {
         float jumpInput = Input.GetAxisRaw("Jump");
 
         isWallSliding = false;
@@ -124,6 +160,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             audioSource.Play(0);
+
         }
 
         if (IsGrounded() && mayJump)
@@ -134,8 +171,10 @@ public class PlayerController : MonoBehaviour
         {
             isJumping = true;
         }
+    }
 
-
+    public void FlipPlayerCode(Rigidbody2D rb)
+    {
         if (rb.velocity.x > 0)
         {
             GetComponent<SpriteRenderer>().flipX = false;
@@ -144,42 +183,17 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<SpriteRenderer>().flipX = true;
         }
+    }
 
-        if (transform.position.y < -11)
-        {
-            respawn();
-        }
-
-        if (Physics2D.OverlapCircle(RightWallChecker.position, .2f, finishWallLayer))
-        {
-            print("finish");
-            SceneManager.LoadScene(1);
-            health = 3;
-        }
-
-        float fireInput = Input.GetAxisRaw("Fire1");
-
+    public void PlayerShootCode(float fireInput)
+    {
         timeSinceLastshot += Time.deltaTime;
-
 
         if (fireInput > 0 && gunEquipped && timeSinceLastshot > timeBetweenShots)
         {
             Instantiate(bullet, firePosition.position, Quaternion.identity);
             timeSinceLastshot = 0;
         }
-
-        if (health <= 0)
-        {
-            gameOver = true;
-        }
-
-
-        if (gameOver)
-        {
-            SceneManager.LoadScene(2);
-            health = 3;
-        }
-
     }
 
     private bool IsGrounded()
@@ -194,7 +208,7 @@ public class PlayerController : MonoBehaviour
     {
         return Physics2D.OverlapCircle(LeftWallChecker.position, 0.2f, wallLayer);
     }
-    private void WallSlide  (Rigidbody2D rb, float wallSlideSpeed)
+    private void WallSlide(Rigidbody2D rb, float wallSlideSpeed)
     {
         rb.velocity = new Vector2(rb.velocity.x, -wallSlideSpeed);
     }
