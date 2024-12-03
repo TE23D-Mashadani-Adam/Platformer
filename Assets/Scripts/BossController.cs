@@ -46,10 +46,6 @@ public class BossController : MonoBehaviour
 
     float frozenCooldown = 0;
 
-    void Start()
-    {
-        AudioSource audioSource = GetComponent<AudioSource>();
-    }
 
     // Update is called once per frame
     void Update()
@@ -59,77 +55,11 @@ public class BossController : MonoBehaviour
 
         if (!frozen)
         {
-
+            // Boss movement
             Vector2 movement = new Vector2(0, speed);
             transform.Translate(movement * Time.deltaTime);
-            timeSinceLastShot += Time.deltaTime;
-            if (touchUpBarrier() && timesShooted < 8)
-            {
-                if (shootRounds < 2)
-                {
-                    speed = 0;
-                }
-                else
-                {
-                    speed = -normalSpeed;
-                }
-                if (timeSinceLastShot > timeBetweenShots)
-                {
-                    Instantiate(bullet, gunPosition.position, Quaternion.identity);
-                    timeSinceLastShot = 0;
-                    shootRounds++;
-                    timesShooted++;
-                }
 
-
-            }
-            else if (touchDownBarrier() && timesShooted < 8)
-            {
-                if (shootRounds < 2)
-                {
-                    speed = 0;
-                }
-                else
-                {
-                    speed = normalSpeed;
-                }
-                if (timeSinceLastShot > timeBetweenShots)
-                {
-                    Instantiate(bullet, gunPosition.position, Quaternion.identity);
-                    timeSinceLastShot = 0;
-                    shootRounds++;
-                    timesShooted++;
-                }
-            }
-
-            if (timesShooted >= 8)
-            {
-                megaAttackPhase = true;
-            }
-
-            if (megaAttackPhase && timesShooted >= 8)
-            {
-                speed = 0;
-                if (timeSinceLastShot > timeBetweenShots)
-                {
-                    Instantiate(megaBullet, gunPosition.position, Quaternion.identity);
-                    timeSinceLastShot = 0;
-                    megaAttackRounds++;
-                }
-
-                if (megaAttackRounds == 1)
-                {
-                    megaAttackPhase = false;
-                    speed = normalSpeed;
-                    megaAttackRounds = 0;
-                    timesShooted = 0;
-                }
-            }
-
-            if (!touchDownBarrier() && !touchUpBarrier())
-            {
-                shootRounds = 0;
-            }
+            BossShootLogicCode();
 
         }
         else
@@ -138,6 +68,126 @@ public class BossController : MonoBehaviour
             cooldownShootSlider.value = frozenTime;
         }
 
+        antiFrozeBossLogic();
+
+
+        BossKillCode();
+
+
+
+    }
+
+    bool TouchUpBarrier()
+    {
+        return Physics2D.OverlapCircle(upChecker.position, .2f, barrier);
+    }
+    bool TouchDownBarrier()
+    {
+        return Physics2D.OverlapCircle(downChecker.position, .2f, barrier);
+    }
+
+    public void BossShootLogicCode()
+    {
+        timeSinceLastShot += Time.deltaTime;
+        if (TouchUpBarrier() && timesShooted < 8)
+        {
+            if (shootRounds < 2)
+            {
+                speed = 0;
+            }
+            else
+            {
+                speed = -normalSpeed;
+            }
+            if (timeSinceLastShot > timeBetweenShots)
+            {
+                Instantiate(bullet, gunPosition.position, Quaternion.identity);
+                timeSinceLastShot = 0;
+                shootRounds++;
+                timesShooted++;
+            }
+
+
+        }
+        else if (TouchDownBarrier() && timesShooted < 8)
+        {
+            if (shootRounds < 2)
+            {
+                speed = 0;
+            }
+            else
+            {
+                speed = normalSpeed;
+            }
+            if (timeSinceLastShot > timeBetweenShots)
+            {
+                Instantiate(bullet, gunPosition.position, Quaternion.identity);
+                timeSinceLastShot = 0;
+                shootRounds++;
+                timesShooted++;
+            }
+        }
+
+        if (timesShooted >= 8)
+        {
+            megaAttackPhase = true;
+        }
+
+        if (megaAttackPhase && timesShooted >= 8)
+        {
+            speed = 0;
+            if (timeSinceLastShot > timeBetweenShots)
+            {
+                Instantiate(megaBullet, gunPosition.position, Quaternion.identity);
+                timeSinceLastShot = 0;
+                megaAttackRounds++;
+            }
+
+            if (megaAttackRounds == 1)
+            {
+                megaAttackPhase = false;
+                speed = normalSpeed;
+                megaAttackRounds = 0;
+                timesShooted = 0;
+            }
+
+            if (!TouchDownBarrier() && !TouchUpBarrier())
+            {
+                shootRounds = 0;
+            }
+
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.tag == "playerBullet")
+            {
+                frozen = true;
+                currentHealth -= damage;
+                hpBar.value = currentHealth;
+                Destroy(other.gameObject);
+                GetComponent<AudioSource>().Play(0);
+            }
+
+        }
+
+    }
+
+    public void BossKillCode()
+    {
+        if (currentHealth < 0)
+        {
+            bossKilled = true;
+        }
+
+        if (bossKilled)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void antiFrozeBossLogic()
+    {
         if (frozenTime > 1f)
         {
             frozen = false;
@@ -168,39 +218,5 @@ public class BossController : MonoBehaviour
         {
             FallingWallScript.wallFall = false;
         }
-
-        if (currentHealth < 0)
-        {
-            bossKilled = true;
-        }
-
-        if (bossKilled)
-        {
-            Destroy(gameObject);
-        }
-
     }
-
-    bool touchUpBarrier()
-    {
-        return Physics2D.OverlapCircle(upChecker.position, .2f, barrier);
-    }
-    bool touchDownBarrier()
-    {
-        return Physics2D.OverlapCircle(downChecker.position, .2f, barrier);
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.tag == "playerBullet")
-        {
-            frozen = true;
-            currentHealth -= damage;
-            hpBar.value = currentHealth;
-            Destroy(other.gameObject);
-            GetComponent<AudioSource>().Play(0);
-        }
-
-    }
-
 }
