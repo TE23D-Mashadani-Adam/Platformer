@@ -38,7 +38,7 @@ public class BossController : MonoBehaviour
     float frozenTime;
 
     float currentHealth = 1;
-    float damage = .08f;
+    float damage = .06f;
 
     float normalSpeed = 6;
 
