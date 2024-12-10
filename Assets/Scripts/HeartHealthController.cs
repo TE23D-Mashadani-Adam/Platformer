@@ -17,7 +17,13 @@ public class HeartHealthController : MonoBehaviour
     {
         health = PlayerController.health;
 
-        for (int i = 0; i < hearts.Length; i++)
+        updateHealth();
+       
+    }
+
+    private void updateHealth()
+    {
+         for (int i = 0; i < hearts.Length; i++)
         { // i = 2
             if (i < health - .5)
             {
