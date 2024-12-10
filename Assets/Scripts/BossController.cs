@@ -56,17 +56,11 @@ public class BossController : MonoBehaviour
     {
         print(currentHealth);
 
-
         if (!frozen)
         {
-
-            Vector2 movement = new Vector2(0, speed);
-            transform.Translate(movement * Time.deltaTime);
-
             timeSinceLastShot += Time.deltaTime;
 
-            BossMovementAttackCode();   
-
+            BossMovementAttackCode();
 
             if (timesShooted >= 8)
             {
@@ -75,21 +69,7 @@ public class BossController : MonoBehaviour
 
             if (megaAttackPhase && timesShooted >= 8)
             {
-                speed = 0;
-                if (timeSinceLastShot > timeBetweenShots)
-                {
-                    Instantiate(megaBullet, gunPosition.position, Quaternion.identity);
-                    timeSinceLastShot = 0;
-                    megaAttackRounds++;
-                }
-
-                if (megaAttackRounds == 1)
-                {
-                    megaAttackPhase = false;
-                    speed = normalSpeed;
-                    megaAttackRounds = 0;
-                    timesShooted = 0;
-                }
+                LaunchMegaAttack();
             }
 
             if (!touchDownBarrier() && !touchUpBarrier())
@@ -104,7 +84,7 @@ public class BossController : MonoBehaviour
             cooldownShootSlider.value = frozenTime;
         }
 
-        if (frozenTime > 1f)
+          if (frozenTime > 1f)
         {
             frozen = false;
             frozenTime = 0;
@@ -126,25 +106,7 @@ public class BossController : MonoBehaviour
             antiFroze = false;
         }
 
-        if (currentHealth < .5)
-        {
-            FallingWallScript.wallFall = true;
-        }
-        else
-        {
-            FallingWallScript.wallFall = false;
-        }
-
-        if (currentHealth < 0)
-        {
-            bossKilled = true;
-        }
-
-        if (bossKilled)
-        {
-            Destroy(gameObject);
-        }
-
+        BossHealthManagement();
     }
 
     bool touchUpBarrier()
@@ -171,6 +133,10 @@ public class BossController : MonoBehaviour
 
     public void BossMovementAttackCode()
     {
+
+        Vector2 movement = new Vector2(0, speed);
+        transform.Translate(movement * Time.deltaTime);
+
         if (touchUpBarrier() && timesShooted < 8)
         {
             if (shootRounds < 2)
@@ -209,6 +175,52 @@ public class BossController : MonoBehaviour
                 timesShooted++;
             }
         }
+    }
+
+    public void BossHealthManagement()
+    {
+        if (currentHealth < .5)
+        {
+            FallingWallScript.wallFall = true;
+        }
+        else
+        {
+            FallingWallScript.wallFall = false;
+        }
+
+        if (currentHealth < 0)
+        {
+            bossKilled = true;
+        }
+
+        if (bossKilled)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void LaunchMegaAttack()
+    {
+        speed = 0;
+        if (timeSinceLastShot > timeBetweenShots)
+        {
+            Instantiate(megaBullet, gunPosition.position, Quaternion.identity);
+            timeSinceLastShot = 0;
+            megaAttackRounds++;
+        }
+
+        if (megaAttackRounds == 1)
+        {
+            megaAttackPhase = false;
+            speed = normalSpeed;
+            megaAttackRounds = 0;
+            timesShooted = 0;
+        }
+    }
+
+    public void BossFreezeAlghorithm()
+    {
+      
     }
 
 }

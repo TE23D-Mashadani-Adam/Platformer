@@ -18,7 +18,7 @@ public class PlayerBulletController : MonoBehaviour
         Vector2 movement = new Vector2(speed, 0) * Time.deltaTime;
         transform.Translate(movement);
 
-        if (transform.position.x > 20)
+        if (transform.position.x > 0)
         {
             Destroy(gameObject);
         }

@@ -18,7 +18,7 @@ public class bulletController : MonoBehaviour
         Vector2 movement = new Vector2(bulletSpeed, 0) * Time.deltaTime;
         transform.Translate(movement);
 
-        if (transform.position.x < -25)
+        if (transform.position.x < -25 || transform.position.x > 0)
         {
             Destroy(gameObject);
         }
@@ -29,7 +29,6 @@ public class bulletController : MonoBehaviour
     {
         if (other.tag == "Reflecting Wall")
         {
-            print("collide!");
             GetComponent<bulletController>().bulletSpeed *= -1;
         }
     }
