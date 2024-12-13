@@ -1310,7 +1310,6 @@ MonoBehaviour:
     m_Bits: 128
   slidingSpeed: 0.5
   wallSlideSpeed: 4
-  wallHorizontalSpeed: 50
   wallJumpForce: 25
   offWallForce: 230
   weapon: {fileID: 1874435052}
